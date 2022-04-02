@@ -1,7 +1,9 @@
-### 200 · Longest Palindromic Substring
-初始化：p[i][i] = True  p[i][i+1] = s[i] == s[i+1]
-转移方程：p[i][j] = p[i+1][j-1] and (p[i] == p[j])   
-i:行，j:列     
+### 200 · Longest Palindromic Substring  
+初始化：p[i][i] = True  p[i][i+1] = s[i] == s[i+1]  
+转移方程：p[i][j] = p[i+1][j-1] and (p[i] == p[j])  
+更新条件：按对角线，向右上角，每次更新**长度相同**的子串是否是回文串
+
+i:行，j:列      
 --a b c f c b a    
 a 1 0 0 0 0 0 1  
 b - 1 0 0 0 1 0  
@@ -22,11 +24,6 @@ class Solution:
             return ''
         if len(s) == 1:
             return s
-        if len(s) == 2:
-            if s[0] == s[1]:
-                return s 
-            else:
-                return ''
         pa = [[False]*len(s) for _ in range(len(s))]
         #init
         longest = 1
