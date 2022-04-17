@@ -91,3 +91,27 @@ class Solution:
                 yield word_new
                 
 ```
+
+### 778. Swim in Rising Water
+#### hard
+dijkstra 算法
+```python
+class Solution:
+    def swimInWater(self, grid: List[List[int]]) -> int:
+        N = len(grid)
+        seen = set()
+        minH = [[grid[0][0], 0, 0]]
+        directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+        seen.add((0, 0))
+        while minH:
+            t, r, c = heapq.heappop(minH)
+            seen.add((r, c))
+            if r == N - 1 and c == N - 1:
+                return t
+            for dr, dc in directions:
+                nr, nc = dr + r, dc + c
+                if (nr < 0) or (nc < 0) or (nr >= N) or ((nr, nc) in seen) or (nc >= N):
+                    continue
+                seen.add((nr, nc))
+                heapq.heappush(minH, [max(t, grid[nr][nc]), nr, nc])
+```
