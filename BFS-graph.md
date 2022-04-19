@@ -1,5 +1,6 @@
 ### 863. All Nodes Distance K in Binary Tree
 #### media
+https://www.youtube.com/watch?v=pHdl1QOtf1g&t=1448s   
 包含：dfs树转图，bfs遍历图
 ```python
 # Definition for a binary tree node.
@@ -65,6 +66,7 @@ class Solution:
 ```
 ### 127. Word Ladder
 #### hard
+https://www.youtube.com/watch?v=0fzUFMpGLMU&t=389s
 ```python
 class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
@@ -94,6 +96,7 @@ class Solution:
 
 ### 778. Swim in Rising Water
 #### hard
+https://www.youtube.com/watch?v=amvrKlMLuGY    
 dijkstra 算法
 ```python
 class Solution:
@@ -114,4 +117,26 @@ class Solution:
                     continue
                 seen.add((nr, nc))
                 heapq.heappush(minH, [max(t, grid[nr][nc]), nr, nc])
+```
+### 847 
+#### hard
+https://www.youtube.com/watch?v=Vo3OEN2xgwk  
+seen：记录所有组合   
+
+```python
+class Solution:
+    def shortestPathLength(self, graph: List[List[int]]) -> int:
+        n = len(graph)
+        queue = [[i, 0, 1 << i] for i in range(n)]
+        seen = [set() for i in range(n)] # 记录路径到达每一个node时所经过的点，初始化只经过自己
+        while queue:
+            node, level, state = queue.pop(0)
+            if state == (1 << n) - 1: # 到达当前节点，其路径已遍历所有节点
+                return level
+            if state in seen[node]:
+                continue
+            seen[node].add(state)
+            print(seen)
+            for nei in graph[node]:
+                queue.append([nei, level + 1, state | 1 << nei])
 ```
