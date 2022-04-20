@@ -1,3 +1,36 @@
+### 429. N-ary Tree Level Order Traversal
+#### media
+https://www.youtube.com/watch?v=rdOULhA5-Q4
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val=None, children=None):
+        self.val = val
+        self.children = children
+"""
+class Solution:
+    def levelOrder(self, root: 'Node') -> List[List[int]]:
+        if not root:
+            return []
+        queue = [[root, 0]]
+        res = dict()
+        res_l = []
+        while len(queue) > 0:
+            node, level = queue.pop(0)
+            cur_l = res.get(level, list())
+            cur_l.append(node.val)
+            res[level] = cur_l
+            for next_node in node.children:
+                queue.append([next_node, level + 1])
+        res = list(sorted(res.items(), key = lambda x:x[0]))
+        for _, vals in res:
+            res_l.append(vals)
+        return res_l
+```
+
+
+
 ### 863. All Nodes Distance K in Binary Tree
 #### media
 https://www.youtube.com/watch?v=pHdl1QOtf1g&t=1448s   
