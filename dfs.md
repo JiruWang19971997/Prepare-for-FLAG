@@ -1,4 +1,4 @@
-
+## 图，寻找路径
 ### 79. Word Search
 #### media
 ```python
@@ -25,9 +25,86 @@ class Solution:
         return found
 ```
 
+### 212. Word Search II
+#### hard
+构建trie树（指针，字典）   
+遍历trie树
+```python
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        if len(board) == 0 or len(board[0]) == 0 or len(words) == 0:
+            return []
+        # build trie
+        trie = dict()
+        for word in words:
+            t = trie
+            for c in word:
+                if c not in t.keys():
+                    t[c] = dict()
+                t = t[c]
+            t['#'] = None #结束点
+        
+        # dfs
+        res = set()
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] not in trie.keys():
+                    continue
+                self.dfs(board, trie, i, j, '', res)
+        return res
+        
+    def dfs(self, board, trie, i, j, word, res):
+        # 超出范围
+        
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+            return
+        
+        c = board[i][j]
+        
+        # 不是这一层的节点
+        if c not in trie:
+            return
+        
+        if '#' in trie[c]:
+            res.add(word + c)
+            if len(trie[c]) == 1:
+                return
+        board[i][j] = '##'
+        self.dfs(board, trie[c], i + 1, j, word + c, res)
+        self.dfs(board, trie[c], i - 1, j, word + c, res)
+        self.dfs(board, trie[c], i, j + 1, word + c, res)
+        self.dfs(board, trie[c], i, j - 1, word + c, res)
+        board[i][j] = c
+```
 
-
-
+## 图，小岛问题
+### 419. Battleships in a Board
+## media
+```python
+class Solution:
+    def countBattleships(self, board: List[List[str]]) -> int:
+        if len(board) == 0 or len(board[0]) == 0:
+            return 0
+        count = 0
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if board[i][j] == '.':
+                    continue
+                count += 1
+                self.dfs(board, i, j)
+        return count
+        
+    def dfs(self, board, i, j):
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+            return
+        if board[i][j] == '.':
+            return
+        board[i][j] = '.'
+        self.dfs(board, i + 1, j)
+        self.dfs(board, i - 1, j)
+        self.dfs(board, i, j + 1)
+        self.dfs(board, i, j - 1)
+```
 
 
 
