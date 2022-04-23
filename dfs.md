@@ -1,3 +1,35 @@
+## 两数之和，简单模板
+ 递归写法
+- 确定dfs递归的路径记录矩阵：combinations
+- 记录矩阵在本地dfs执行结束后，要还原：combinations.pop()
+- 每次递归需更新原始数值或matrix
+迭代写法
+- 定义visited矩阵，记录执行过的路径
+- 使用stack
+### 39. Combination Sum
+#### media
+```python
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        if len(candidates) == 0:
+            return [[]]
+        results = []
+        self.dfs(candidates, target, 0, [], results)
+        return results
+    
+    def dfs(self, candidates, target, idx, combinations, results):
+        if target < 0:
+            return
+        if target == 0:
+            return results.append(list(combinations))
+        for i in range(idx, len(candidates)):
+            combinations.append(candidates[i])
+            self.dfs(candidates, target - candidates[i], i, combinations, results)
+            combinations.pop()
+```
+
+
+
 ## 图，寻找路径
 ### 79. Word Search
 #### media
@@ -106,7 +138,77 @@ class Solution:
         self.dfs(board, i, j - 1)
 ```
 
-
+## 应用题
+抽象当前状态到下一状态得每一步,以及每个状态
+### 365. Water and Jug Problem
+#### media
+用迭代写dfs
+- 普通写法
+```python
+class Solution:
+    def canMeasureWater(self, jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -> bool:
+        # dfs, iteration
+        stack = [(0, 0)]
+        seen = set()
+        while len(stack) > 0:
+            jug1, jug2 = stack.pop()
+            if jug1 + jug2 == targetCapacity or jug1 == targetCapacity or jug2 == targetCapacity:
+                return True
+            if (jug1, jug2) in seen:
+                continue
+            if (jug1, jug2) in seen:
+                continue
+            seen.add((jug1, jug2))
+            stack.append((jug1Capacity, jug2)) # jug1倒满
+            stack.append((0, jug2)) # jug1倒光
+            stack.append((max(jug1 - (jug2Capacity - jug2),0), min(jug2Capacity,jug2 + jug1))) # jug1倒入jug2
+            stack.append((jug1, jug2Capacity))
+            stack.append((jug1, 0))
+            stack.append((min(jug1Capacity,jug1 + jug2), max(0, jug2 - (jug1Capacity - jug1)))) #jug2倒入jug1
+        return False
+```
+- follow up
+```python
+class Solution:
+    def canMeasureWater(self, x: int, y: int, z: int) -> bool:
+        if x == z or y == z:
+            return True
+        if x + y < z:
+            return False
+        if (x == 0 or y == 0) and z > 0:
+            return False
+        
+        # dfs, iteration
+        stack = [0]
+        seen = set()
+        x, y = min(x, y), max(x, y)
+        while len(stack) > 0:
+            state = stack.pop()
+            seen.add(state)
+            if state == z or state + x == z:
+                return True
+            
+            # x加满，倒入y,x被清空
+            s = state + x
+            if s not in seen and s <= y:
+                stack.append(s)
+            
+            # y倒入x，x被加满
+            s = state - x
+            if s not in seen and s > 0:
+                stack.append(s)
+            
+            # x清空，y倒入x，y加满，y倒入x，x清空
+            s = y - (x - state)
+            if s not in seen and s > 0 and s <= y:
+                stack.append(s)
+            
+            # x加满，x倒入y，清空y，x倒入y
+            s = x - (y - state)
+            if s not in seen and s > 0 and s <= y:
+                stack.append(s)
+        return False
+```
 
 
 
