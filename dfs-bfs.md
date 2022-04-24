@@ -137,6 +137,67 @@ class Solution:
         self.dfs(board, i, j + 1)
         self.dfs(board, i, j - 1)
 ```
+## 图论，搜索
+### 210. Course Schedule II
+#### media
+bfs
+```python
+class Solution:
+    def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
+        graph = {i:[] for i in range(numCourses)}
+        in_degree = [0 for i in range(numCourses)]
+        for course_id, pre_id in prerequisites:
+            graph[pre_id].append(course_id)
+            in_degree[course_id] += 1
+        queue = []
+        for i in range(numCourses):
+            if in_degree[i] == 0:
+                queue.append(i)
+        res = []
+        while len(queue) > 0:
+            course_id = queue.pop(0)
+            res.append(course_id)
+            for idx in graph[course_id]:
+                in_degree[idx] -= 1
+                if in_degree[idx] == 0:
+                    queue.append(idx)
+        if len(res) < numCourses:
+            return []
+        if len(res) == numCourses:
+            return res
+```
+dfs
+```python
+# dfs
+        pre_list = [[] for i in range(numCourses)]
+        for course_id, pre_id in prerequisites:
+            pre_list[course_id].append(pre_id)
+        res = []
+        visited = [-1 for i in range(numCourses)]
+        # 倒序法，遍历每一个点，确认这个点是否可以通过pre course走到，如果可以走到，再遍历下一个点是否可以走到
+        for course_idx in range(numCourses):
+            if not self.dfs(pre_list, visited, course_idx, res):
+                return []
+        return res
+            
+    def dfs(self, pre_list, visited, course_idx, res):
+        if visited[course_idx] == 1:
+            return True
+        if visited[course_idx] == 0:
+            return False
+        visited[course_idx] = 0
+        for idx in pre_list[course_idx]:
+            if not self.dfs(pre_list, visited, idx, res):
+                return False
+        # 如果先修课节点全部修过，visited == 1
+        visited[course_idx] = 1
+        res.append(course_idx)
+        return True
+```
+
+
+
+
 
 ## 应用题
 抽象当前状态到下一状态得每一步,以及每个状态
