@@ -240,7 +240,29 @@ class Solution:
             return max(left_height, right_height) + 1
         
 ```
-
+### 112. Path Sum
+#### easy
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+        if root == None:
+            return False
+        return self.helper(root,targetSum)
+    def helper(self, root, targetSum):
+        if root is None:
+            return False
+        if root.left is None and root.right == None and targetSum == root.val:
+            return True
+        left_bool = self.helper(root.left, targetSum - root.val)
+        right_bool = self.helper(root.right, targetSum - root.val)
+        return left_bool or right_bool
+```
 
 
 ## 重要！**重建二叉树**
